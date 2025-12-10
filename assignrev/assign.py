@@ -3,10 +3,10 @@ import numpy as np
 import os
 
 folder = "reports"
-masrev = "1ERP MAS Rev"
-mlprev = "1ERP MLP Rev"
-nusrev = "Legacy NUS Rev"
-all_revisions = (masrev, mlprev)
+masrev = "1ERP MAS Rev CLEAN"
+mlprev = "1ERP MLP Rev CLEAN"
+nusrev = "Legacy NUS CLEAN"
+all_revisions = (masrev,mlprev)
 
 report_path = os.path.join(os.path.dirname(__file__), folder)
 
@@ -19,7 +19,8 @@ def read_all_excel_sheets(folder_path):
             for sheet in xls.sheet_names:
                 print("Reading sheet:", sheet)
                 reportdf = pd.read_excel(xls, sheet_name=sheet)
-                sheets.append(reportdf)
+                if not reportdf.empty:
+                    sheets.append(reportdf)
     return sheets
 
 all_reports = read_all_excel_sheets(report_path)
@@ -28,23 +29,25 @@ def clean_revision_data(reports):
     res = []
 
     for df in reports:
+
         if df.empty or len(df.columns) == 0:
             break
 
         if masrev in df.columns and mlprev in df.columns and nusrev in df.columns:
             for index, row in df.iterrows():
                 # Process the values from both columns
-                for rev in all_revisions:
+                for rev in tuple(all_revisions):
                     new_col_name = f"{rev}_NEW"
                     if new_col_name not in df.columns:
                         df[new_col_name] = ""
-
+                        
                     rev_value = row[rev]
                     nus_value = row[nusrev]
 
                     print(f"Processing row {index}: {rev}={rev_value}, {nusrev}={nus_value}")
-                    if pd.isna(rev_value) or rev_value == "'--":
+                    if pd.isna(rev_value) or rev_value == "--":
                         value = nus_value
+                        print(f"Using {nusrev} value: {value}")
                     else:
                         value = rev_value
                     
