@@ -39,11 +39,10 @@ if len(countdict) == 2:
     dict1, source1 = countdict[0]
     dict2, source2 = countdict[1]
 
-    common_keys = set(dict1.keys()) + set(dict2.keys())
+    common_keys = set(list(dict1.keys()) + list(dict2.keys()))
 
-    
-    dict1_filtered = {k: dict1[k] for k in common_keys}
-    dict2_filtered = {k: dict2[k] for k in common_keys}
+    dict1_filtered = {k: dict1.get(k, 0) for k in common_keys}
+    dict2_filtered = {k: dict2.get(k, 0) for k in common_keys}
     
     # print(f"{source1} filtered:", dict1_filtered)
     # print(f"{source2} filtered:", dict2_filtered)
