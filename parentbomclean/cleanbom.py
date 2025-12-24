@@ -3,10 +3,12 @@ import numpy as np
 import os
 
 folder = "reports"
+allparts = "mlpall"
 exportstr = "Export"
 sfile = "SOURCE_FILE"
 
 report_path = os.path.join(os.path.dirname(__file__), folder)
+allparts_path = os.path.join(os.path.dirname(__file__), allparts)
 
 def read_all_excel_sheets(folder_path):
     sheets = []
@@ -34,12 +36,19 @@ for report in all_reports:
     # print(f"{source_file} - Parent Part Counts:", len(parent_counts))
     countdict += [(parent_counts, source_file)]
 
-print(len(countdict))
+allpartsreport = read_all_excel_sheets(allparts_path)
+item = "Item"
+part_items=[]
+for partreport in allpartsreport:
+    part_items = partreport[item].tolist()
+    print(f"Part Items in {partreport[sfile].iloc[0]}:", len(part_items))
+
 if len(countdict) == 2:
     dict1, source1 = countdict[0]
+    dict1.update({item: 0 for item in part_items if item not in dict1})
     dict2, source2 = countdict[1]
 
-    common_keys = set(list(dict1.keys()) + list(dict2.keys()))
+    common_keys = set(dict1.keys()) & set(dict2.keys())
 
     dict1_filtered = {k: dict1.get(k, 0) for k in common_keys}
     dict2_filtered = {k: dict2.get(k, 0) for k in common_keys}
@@ -51,5 +60,4 @@ if len(countdict) == 2:
         source2: dict2_filtered
     }).fillna(0).astype(int)
 
-    print(comparison_df)
     comparison_df.to_excel("parent_part_comparison.xlsx")

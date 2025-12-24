@@ -1,3 +1,6 @@
 reports/
 assignrev/cleaned_revisions.xlsx
-parentbomclean/parent_part_comparison.xlsx
+parentbomclean/mlpall/
+.gitignore
+parent_part_comparison.xlsx
+parentbomclean/Comparison_BOM_MLPNUS_12242025.xlsx
