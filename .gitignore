@@ -4,3 +4,5 @@ parentbomclean/mlpall/
 .gitignore
 parent_part_comparison.xlsx
 parentbomclean/Comparison_BOM_MLPNUS_12242025.xlsx
+bomcompare/items/parts.xlsx
+bomcompare/PartOverlap.xlsx
