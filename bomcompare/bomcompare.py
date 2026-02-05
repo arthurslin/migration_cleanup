@@ -30,14 +30,17 @@ all_items =  read_all_excel_sheets(items_path)
 all_items = set(all_items[0][pn]) # Assuming only one sheet with items
 
 filtered_reports = []
-print(len(all_reports))
+all_items = None # Set items as empty to include all items in the comparison, or populate it with specific items to filter by
 for report in all_reports:
-    print(report.columns)
+
     if parent_part in report.columns:
-        filtered = report[report[parent_part].isin(all_items)][[child_part, parent_part, prefix]]
+        if all_items:
+            filtered = report[report[parent_part].isin(all_items)][[child_part, parent_part, prefix]]
+        else:
+            filtered = report[[child_part, parent_part, prefix]]
         filtered_reports.append(filtered)
 
 combined_reports = pd.concat(filtered_reports, ignore_index=True)
 
 combined_reports = combined_reports[~combined_reports.duplicated(subset=[child_part, parent_part], keep=False)]
-combined_reports.to_excel("parent_part_comparison.xlsx", index=False)
+combined_reports.to_excel("bom_parts_comparison.xlsx", index=False)
